@@ -17,18 +17,20 @@ if __name__ == "__main__":
     x = fit.columns
     del x[4]
     del x[11]
+    del x[6]
     train, valid, text = fit.split_frame([.6,.2], seed=50)
     params = {
         'ntrees' : [10,20,30,40],
-        'nbins_cats': [2,4,8,16,32],
-        'learn_rate' : [1,.1,.01],
-        'sample_rate' : [.9,.8],
+        'nbins_cats': [2,4,8],
+        'learn_rate' : [1,.1],
+        'sample_rate' : [.9, 1],
         'col_sample_rate' : [.9,.8],
         'seed' : [42],
-        'stopping_rounds' : [5],
+        'stopping_rounds' : [10],
         'stopping_tolerance' : [1e-5],
-        'stopping_metric' : ['logloss'],
-        'balance_classes': [True, False]}
-    grid = H2OGridSearch(H2OGradientBoostingEstimator, params, grid_id='gbm_grid_fit1')
+        'stopping_metric' : ['mse'],
+        'balance_classes': [True]
+        }
+    grid = H2OGridSearch(H2OGradientBoostingEstimator, params, grid_id='gbm_grid_fit')
     grid.train(x=x, y=y, training_frame=train, validation_frame=valid)
     print(grid)
