@@ -4,7 +4,6 @@ h2o.init()
 from h2o.estimators.gbm import H2OGradientBoostingEstimator
 from h2o.grid.grid_search import H2OGridSearch
 import pandas as pd
-# from sklearn.preprocessing import Imputer
 
 if __name__ == "__main__":
     df = pd.read_json("data/modcloth_final_data.json", lines=True)
@@ -33,4 +32,6 @@ if __name__ == "__main__":
         }
     grid = H2OGridSearch(H2OGradientBoostingEstimator, params, grid_id='gbm_grid_fit')
     grid.train(x=x, y=y, training_frame=train, validation_frame=valid)
-    print(grid)
+    model = grid.get_grid(sort_by='logloss', decreasing=True)[0]
+    pred = model.predict(text)
+    print(pred)
